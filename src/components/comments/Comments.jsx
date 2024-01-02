@@ -1,9 +1,12 @@
-import "./comments.scss"
+import { useContext } from "react";
+import "./comments.scss";
+import { AuthContext } from "../../context/authContext";
 
 const Comments = () => {
+    const { currentUser } = useContext(AuthContext);
 
+ 
     //Dummy commets
-
   const comments = [
     {
       id: 1,
@@ -36,8 +39,25 @@ const Comments = () => {
     },
   ];
   return (
-    <div>Comments</div>
-  )
-}
+    <div className="comments">
+        <div className="write">
+            <img src={currentUser.profilePic} alt="" />
+            <input type="text"  placeholder="Write a comment "/>
+            <button>Send</button>
+        </div>
+      {comments.map((comment) => (
+        <div className="comment" key={comment.id}>
+          <img src={comment.profilePic} alt="" />
 
-export default Comments
+          <div className="info">
+            <span>{comment.name}</span>
+            <p>{comment.desc}</p>
+          </div>
+          <span className="date">1 hour ago</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Comments;
