@@ -14,7 +14,9 @@
     overflow: hidden;
     .left {
       flex: 1;
-      background: linear-gradient(rgba(39,11,96,0.5), rgba(39,11,996,0.5)), url("https://images.pexels.com/photos/3201718/pexels-photo-3201718.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")  center;
+      background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 996, 0.5)),
+        url("https://images.pexels.com/photos/3201718/pexels-photo-3201718.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
+          center;
       background-size: cover;
       padding: 50px;
       display: flex;
@@ -27,6 +29,7 @@
         line-height: 100px;
       }
       p {
+        color: white;
       }
       span {
         font-size: 14px;
@@ -39,7 +42,6 @@
         color: rebeccapurple;
         font-weight: bold;
         cursor: pointer;
-
       }
     }
 
@@ -60,19 +62,18 @@
         gap: 30px;
 
         input {
-            border: none;
-            border-bottom: 1px solid lightgray;
-            padding: 20px 10px;
+          border: none;
+          border-bottom: 1px solid lightgray;
+          padding: 20px 10px;
         }
         button {
-            width: 50%;
-            padding: 10px;
-            border: none;
-            background-color: #938eef;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-
+          width: 50%;
+          padding: 10px;
+          border: none;
+          background-color: #938eef;
+          color: white;
+          cursor: pointer;
+          font-weight: bold;
         }
       }
     }
