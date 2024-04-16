@@ -1,12 +1,44 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import "./comments.scss";
 import { AuthContext } from "../../context/authContext";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { makeRequset } from "../../axios";
+import moment from "moment";
 
-const Comments = () => {
-    const { currentUser } = useContext(AuthContext);
+const Comments = ({ postId }) => {
+  const { currentUser } = useContext(AuthContext);
+  const [comment, setComment] = useState("");
 
- 
-    //Dummy commets
+  const { isLoading, error, data } = useQuery(["comments"], () =>
+    makeRequset.get("/comments?postId=" + postId).then((res) => {
+      return res.data;
+    })
+  );
+
+  // console.log(data);
+
+  const queryClient = useQueryClient();
+
+  // Mutations
+  const mutation = useMutation(
+    (newComment) => {
+      // console.log(newComment);
+      return makeRequset.post("/comments", newComment);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["comments"]);
+      },
+    }
+  );
+  const handleClick = async (e) => {
+    e.preventDefault();
+    mutation.mutate({ comment, postId });
+    setComment("");
+  };
+
+  //Dummy commets
   const comments = [
     {
       id: 1,
@@ -40,22 +72,31 @@ const Comments = () => {
   ];
   return (
     <div className="comments">
-        <div className="write">
-            <img src={currentUser.profilePic} alt="" />
-            <input type="text"  placeholder="Write a comment "/>
-            <button>Send</button>
-        </div>
-      {comments.map((comment) => (
-        <div className="comment" key={comment.id}>
-          <img src={comment.profilePic} alt="" />
+      <div className="write">
+        <img src={currentUser.profilePic} alt="" />
+        <input
+          type="text"
+          placeholder="Write a comment.."
+          onChange={(e) => setComment(e.target.value)}
+          value={comment}
+        />
+        <button onClick={handleClick}>Send</button>
+      </div>
+      {isLoading
+        ? "loading..."
+        : data.map((comment) => (
+            <div className="comment" key={comment.id}>
+              <img src={comment.profilePic} alt="" />
 
-          <div className="info">
-            <span>{comment.name}</span>
-            <p>{comment.desc}</p>
-          </div>
-          <span className="date">1 hour ago</span>
-        </div>
-      ))}
+              <div className="info">
+                <span>{comment.name}</span>
+                <p>{comment.comment}</p>
+              </div>
+              <span className="date">
+                {moment(comment.createdAt).fromNow()}
+              </span>
+            </div>
+          ))}
     </div>
   );
 };

@@ -1,9 +1,22 @@
 import React from "react";
 import Post from "../post/Post";
+import { useQuery } from "react-query";
+import { makeRequset } from "../../axios";
 
-const Posts = () => {
+const Posts = ({ userId }) => {
+  console.log("post");
   //Dummy Post
+  const { isLoading, error, data } = useQuery(["posts"], () => {
+    if (userId)
+      return makeRequset.get("/posts?userId=" + userId).then((res) => {
+        return res.data;
+      });
+    return makeRequset.get("/posts").then((res) => {
+      return res.data;
+    });
+  });
 
+  // console.log(data);
   const posts = [
     {
       id: 1,
@@ -41,9 +54,11 @@ const Posts = () => {
 
   return (
     <div className="posts">
-      {posts.map((post) => (
-          <Post post={post}  key={post.id} />
-      ))}
+      {error
+        ? "Something went wrong"
+        : isLoading
+        ? "loading.."
+        : data.map((post) => <Post post={post} key={post.id} />)}
     </div>
   );
 };
